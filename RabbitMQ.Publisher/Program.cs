@@ -22,11 +22,13 @@ channel.QueueDeclare(queue :"my-queue", durable: true, exclusive: false, autoDel
 //byte[] messageBodyBytes = Encoding.UTF8.GetBytes("Hello, World!");
 //channel.BasicPublish(exchange: "", routingKey: "my-queue", basicProperties: null, body: messageBodyBytes);
 
+IBasicProperties properties = channel.CreateBasicProperties();
+properties.Persistent = true; 
 for (int i = 0; i < 100; i++)
 {
     await Task.Delay(200);
     byte[] messageBodyBytes = Encoding.UTF8.GetBytes($"Hello, World! {i}");
-    channel.BasicPublish(exchange: "", routingKey: "my-queue", basicProperties: null, body: messageBodyBytes);
+    channel.BasicPublish(exchange: "", routingKey: "my-queue", basicProperties: properties, body: messageBodyBytes);
 }
 Console.Read();
 
